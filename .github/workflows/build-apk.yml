@@ -26,9 +26,9 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Check website
+      - name: Check TIKORA files
         run: |
-          test -s www/index.html
+          test -s www/index.html/www/index.html
 
       - name: Configure Capacitor
         run: |
@@ -36,7 +36,7 @@ jobs:
           {
             "appId": "com.tikora.app",
             "appName": "TIKORA",
-            "webDir": "www"
+            "webDir": "www/index.html/www"
           }
           EOF
 
@@ -48,6 +48,10 @@ jobs:
 
       - name: Sync Android
         run: npx cap sync android
+
+      - name: Verify Android website
+        run: |
+          test -s android/app/src/main/assets/public/index.html
 
       - name: Build APK
         run: |
