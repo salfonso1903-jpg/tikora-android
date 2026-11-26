@@ -1,3 +1,4 @@
+
 name: Build TIKORA APK
 
 on:
@@ -25,24 +26,19 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Prepare website files
+      - name: Check website
         run: |
-          mkdir -p /tmp/tikora-site
-          find www -type f -name index.html
-          SOURCE=$(find www -type f -name index.html | head -n 1)
-          if [ -z "$SOURCE" ]; then
-            echo "HTML dosyasi bulunamadi"
-            exit 1
-          fi
-          cp -a "$(dirname "$SOURCE")"/. /tmp/tikora-site/
-          rm -rf www
-          mkdir -p www
-          cp -a /tmp/tikora-site/. www/
           test -s www/index.html
 
       - name: Configure Capacitor
         run: |
-          node -e "const fs=require('fs');const p='capacitor.config.json';const c=JSON.parse(fs.readFileSync(p));c.webDir='www';fs.writeFileSync(p,JSON.stringify(c,null,2));"
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.tikora.app",
+            "appName": "TIKORA",
+            "webDir": "www"
+          }
+          EOF
 
       - name: Install dependencies
         run: npm install
@@ -53,18 +49,20 @@ jobs:
       - name: Sync Android
         run: npx cap sync android
 
-      - name: Verify Android website
-        run: |
-          test -s android/app/src/main/assets/public/index.html
-
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
+      - name: Verify APK
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: TIKORA-APK
-          path:path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          
