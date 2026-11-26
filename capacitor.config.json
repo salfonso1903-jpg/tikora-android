@@ -1,5 +1,6 @@
 {
   "appId": "com.tikora.app",
   "appName": "TIKORA",
-  "webDir": "www"
+  "webDir": "www",
+  "bundledWebRuntime": false
 }
