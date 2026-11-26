@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b17">
+<title>TIKORA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101b17;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#182720;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:27px;font-weight:bold;color:#57df9b}
+button{background:#36bd7d;color:#071b12;border:0;padding:12px 18px;border-radius:12px;font-weight:bold}
+main{max-width:600px;margin:auto;padding:16px}
+.card{background:#1c2c24;border-radius:16px;padding:18px;margin:15px 0}
+input{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #456050;background:#101b17;color:white}
+nav{position:fixed;bottom:0;left:0;right:0;background:#182720;padding:15px;display:flex;justify-content:space-around}
+nav button{padding:10px;background:transparent;color:white}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header><div class="logo">TIKORA</div><span>🌍 Sosyal dünya</span></header>
+<main>
+<section id="login" class="card">
+<h2>TIKORA'ya hoş geldin</h2>
+<p>Hemen hesabını oluştur.</p>
+<input id="username" placeholder="Kullanıcı adın">
+<input id="password" type="password" placeholder="Şifren">
+<button onclick="login()">Giriş yap</button>
+<button onclick="register()">Ücretsiz kayıt ol</button>
+</section>
+<section id="app" class="hidden">
+<div class="card"><h2 id="welcome"></h2><p>TIKORA topluluğuna hoş geldin!</p></div>
+<div class="card">
+<h3>Yeni gönderi</h3>
+<input id="postText" placeholder="Aklından neler geçiyor?">
+<button onclick="share()">Paylaş</button>
+</div>
+<div id="feed"></div>
+</section>
+</main>
+<nav>
+<button onclick="showHome()">🏠 Ana sayfa</button>
+<button onclick="showProfile()">👤 Profil</button>
+<button onclick="logout()">Çıkış</button>
+</nav>
+<script>
+function register(){
+const u=document.getElementById('username').value.trim();
+const p=document.getElementById('password').value;
+if(!u||!p){alert('Kullanıcı adı ve şifre gir.');return}
+localStorage.setItem('tikora_user',u);
+localStorage.setItem('tikora_pass',p);
+login();
+}
+function login(){
+const u=document.getElementById('username').value.trim();
+const p=document.getElementById('password').value;
+if(u!==localStorage.getItem('tikora_user')||p!==localStorage.getItem('tikora_pass')){
+alert('Hesap bulunamadı. Önce kayıt ol.');return;
+}
+document.getElementById('login').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+document.getElementById('welcome').textContent='Merhaba, '+u;
+render();
+}
+function logout(){document.getElementById('app').classList.add('hidden');document.getElementById('login').classList.remove('hidden')}
+function share(){
+const t=document.getElementById('postText').value.trim();
+if(!t)return;
+const a=JSON.parse(localStorage.getItem('tikora_posts')||'[]');
+a.unshift({user:localStorage.getItem('tikora_user'),text:t});
+localStorage.setItem('tikora_posts',JSON.stringify(a));
+document.getElementById('postText').value='';render();
+}
+function render(){
+const a=JSON.parse(localStorage.getItem('tikora_posts')||'[]');
+document.getElementById('feed').innerHTML=a.map(x=>'<div class="card"><b>'+safe(x.user)+'</b><p>'+safe(x.text)+'</p></div>').join('');
+}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showHome(){render()}
+function showProfile(){alert('Profil: '+(localStorage.getItem('tikora_user')||'Giriş yapılmadı'))}
+</script>
+</body>
+</html>
