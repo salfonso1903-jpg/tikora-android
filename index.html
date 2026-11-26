@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071b14"><title>TIKORA</title>
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head><body>
+<header><button id="addBtn" aria-label="Gönderi ekle">＋</button><b>TIKORA</b><button id="likesBtn" aria-label="Beğeniler">♡</button></header>
+<section id="auth" class="auth card">
+  <h1>TIKORA'ya hoş geldin</h1><p>Fotoğrafını, videonu ve anlarını paylaş.</p>
+  <input id="email" type="email" placeholder="E-posta adresin" autocomplete="email">
+  <input id="password" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password">
+  <input id="username" placeholder="Kullanıcı adı (kayıt için)">
+  <div class="actions"><button id="signIn">Giriş yap</button><button id="signUp">Ücretsiz kayıt ol</button></div>
+  <small id="authMsg">Kayıt sonrası e-posta onayı gerekebilir. Onay bağlantısı uygulamaya geri dönecek şekilde ayarlanmalıdır.</small>
+</section>
+<main id="app" hidden>
+  <div class="stories"><div class="story addStory" id="storyAdd"><div>＋</div><span>Hikâyen</span></div><div id="storyList" class="storyRow"></div></div>
+  <section id="home" class="screen">
+    <div class="feedHead"><b>Senin için</b><span>Takip akışı</span></div>
+    <div id="feed"></div>
+  </section>
+  <section id="reels" class="screen" hidden><div id="videoFeed"></div></section>
+  <section id="explore" class="screen" hidden><h2>Keşfet</h2><input id="search" placeholder="Kullanıcı ara"><div id="searchResults"></div></section>
+  <section id="messages" class="screen" hidden><h2>Mesajlar</h2><p>Mesajlaşma altyapısı sonraki modülde etkinleştirilecek.</p></section>
+  <section id="profile" class="screen" hidden><div id="myProfile"></div></section>
+</main>
+<nav id="nav" hidden>
+<button data-screen="home">⌂<small>Ana sayfa</small></button>
+<button data-screen="reels">▶<small>Videolar</small></button>
+<button data-screen="explore">⌕<small>Keşfet</small></button>
+<button data-screen="messages">✉<small>Mesajlar</small></button>
+<button data-screen="profile">●<small>Profil</small></button>
+</nav>
+<dialog id="postDialog"><form method="dialog" id="postForm"><h2>Yeni gönderi</h2><textarea id="caption" placeholder="Aklından neler geçiyor?"></textarea><input id="media" type="file" accept="image/*,video/*"><div class="actions"><button value="cancel" class="secondary">Vazgeç</button><button id="publish" type="button">Paylaş</button></div><small id="postMsg"></small></form></dialog>
+<div id="toast" role="status"></div>
+<script type="module" src="app.js"></script>
+</body></html>
